@@ -13,9 +13,11 @@ export interface SimulationData {
   providers: ProviderInsight[]; // Now an array of providers
   detectedIntent: string;
   metadata: {
-    priceSensitivity: string;
-    technicalDepth: string;
-    reviewImportance: number; // 0-100
+    citationProbability: string; // e.g., "Hoch (85%)"
+    tableInclusion: string;      // e.g., "Ja"
+    brandSentiment: string;      // e.g., "Neutral"
+    priceSensitivity: string;    // Kept for backward compatibility
+    technicalDepth: string;      // Kept for backward compatibility
   };
 }
 
@@ -23,8 +25,8 @@ export interface SimulationData {
 export interface ActionStep {
   title: string;
   description: string;
-  priority: 'High' | 'Medium' | 'Low';
-  effort: 'Easy' | 'Moderate' | 'Hard';
+  priority: 'Hoch' | 'Mittel' | 'Niedrig';
+  effort: 'Leicht' | 'Mittel' | 'Schwer';
 }
 
 // Represents a ranking factor for visualization

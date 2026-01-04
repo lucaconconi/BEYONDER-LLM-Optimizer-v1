@@ -46,8 +46,8 @@ const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({ report }) => {
                 <YAxis 
                     dataKey="name" 
                     type="category" 
-                    width={140} 
-                    tick={{ fill: '#F6F7F8', fontSize: 13, fontWeight: 500, fontFamily: 'Montserrat' }} 
+                    width={180} 
+                    tick={{ fill: '#F6F7F8', fontSize: 12, fontWeight: 500, fontFamily: 'Montserrat' }} 
                     axisLine={false}
                     tickLine={false}
                 />

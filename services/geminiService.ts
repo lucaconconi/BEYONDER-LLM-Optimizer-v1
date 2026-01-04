@@ -29,11 +29,13 @@ const simulationSchema: Schema = {
     metadata: {
       type: Type.OBJECT,
       properties: {
-        priceSensitivity: { type: Type.STRING, description: "Preissensibilität (Niedrig, Mittel, Hoch)." },
-        technicalDepth: { type: Type.STRING, description: "Technische Tiefe (Niedrig, Mittel, Hoch)." },
-        reviewImportance: { type: Type.NUMBER, description: "Wichtigkeit von Bewertungen (0-100)" },
+        citationProbability: { type: Type.STRING, description: "Wahrscheinlichkeit einer Verlinkung (z.B. 'Hoch (80%)')." },
+        tableInclusion: { type: Type.STRING, description: "Wird eine Tabelle erstellt? (Ja/Nein)." },
+        brandSentiment: { type: Type.STRING, description: "Erwartetes Sentiment (Positiv, Neutral, Kritisch)." },
+        priceSensitivity: { type: Type.STRING },
+        technicalDepth: { type: Type.STRING },
       },
-      required: ["priceSensitivity", "technicalDepth", "reviewImportance"],
+      required: ["citationProbability", "tableInclusion", "brandSentiment", "priceSensitivity", "technicalDepth"],
     },
   },
   required: ["providers", "detectedIntent", "metadata"],
@@ -49,8 +51,8 @@ const reportSchema: Schema = {
       items: {
         type: Type.OBJECT,
         properties: {
-          name: { type: Type.STRING },
-          score: { type: Type.NUMBER },
+          name: { type: Type.STRING, description: "Name des Kriteriums (z.B. 'Informations-Dichte', 'Schema.org')" },
+          score: { type: Type.NUMBER, description: "Wichtigkeit 0-100" },
           description: { type: Type.STRING },
         },
         required: ["name", "score", "description"],
@@ -85,22 +87,26 @@ const reportSchema: Schema = {
 };
 
 /**
- * Simulates the Multi-LLM Scraping Phase
+ * Simulates the Multi-LLM Scraping Phase (Updated for GEO metrics)
  */
 export const simulateNetworkTraffic = async (keyword: string): Promise<SimulationData> => {
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: `Du bist eine 'Integration Layer'-Simulation. Deine Aufgabe ist es, den internen Suchprozess von 3 verschiedenen LLMs (ChatGPT, Perplexity, Gemini) zu simulieren (Reverse Engineering).
-      
+      contents: `Du bist eine 'Integration Layer'-Simulation für BEYONDER. Deine Aufgabe ist das Reverse Engineering des internen Suchverhaltens von LLMs.
+  
       User Input: "${keyword}".
       
-      Simuliere für JEDES der 3 Modelle separat:
-      1. ChatGPT: Welche Suchbegriffe würde es intern nutzen? (Fokus auf Breite)
-      2. Perplexity: Welche spezifischen Quellen-Suchanfragen würde es stellen? (Fokus auf Fakten)
-      3. Gemini: Welche multimodalen oder Google-Suche-Queries würde es generieren?
-
-      Analysiere zudem die JSON-Metadaten, die in diesen Antworten enthalten wären (Preissensibilität, Tech-Level).
+      Simuliere den Prozess für ChatGPT, Perplexity und Gemini:
+      1. Welche präzisen Keywords triggern die "Browse with Bing" oder "Google Search" Funktionen?
+      2. Welche Quell-Typen (Reddit, Fachportale, Konkurrenzseiten) priorisieren die Modelle für dieses Keyword?
+      3. Berechne basierend auf aktuellen Trainingsdaten das erwartete Marken-Sentiment in den Antworten.
+      
+      Zusatz-Metriken für GEO:
+      - Citation Probability: Wie hoch ist die Chance, dass Quellen verlinkt werden? (String, z.B. "Hoch")
+      - Table-Inclusion: Wird die KI eine Vergleichstabelle erstellen? (String, z.B. "Ja")
+      - Brand Sentiment: Erwartetes Sentiment? (String, z.B. "Neutral")
+      - Price Sensitivity & Technical Depth (wie bisher)
       
       Antworte strikt als JSON Objekt passend zum Schema.`,
       config: {
@@ -125,7 +131,13 @@ export const simulateNetworkTraffic = async (keyword: string): Promise<Simulatio
       timestamp: new Date().toISOString(),
       providers: providers,
       detectedIntent: parsed.detectedIntent || "Unbekannt",
-      metadata: parsed.metadata || { priceSensitivity: "Mittel", technicalDepth: "Niedrig", reviewImportance: 50 },
+      metadata: parsed.metadata || { 
+        citationProbability: "Mittel", 
+        tableInclusion: "Vielleicht", 
+        brandSentiment: "Neutral",
+        priceSensitivity: "Mittel", 
+        technicalDepth: "Niedrig" 
+      },
     };
   } catch (error) {
     console.error("Simulation Error:", error);
@@ -134,7 +146,7 @@ export const simulateNetworkTraffic = async (keyword: string): Promise<Simulatio
 };
 
 /**
- * Analyzes the simulated data
+ * Analyzes the simulated data (Updated for E-E-A-T and Information Gains)
  */
 export const generateStrategyReport = async (simulation: SimulationData): Promise<StrategyReport> => {
   try {
@@ -142,14 +154,21 @@ export const generateStrategyReport = async (simulation: SimulationData): Promis
     const allQueries = simulation.providers.flatMap(p => p.interceptedQueries);
 
     const prompt = `
-      Analysiere die abgefangenen Daten aus dem Multi-LLM-Scraping (ChatGPT, Perplexity, Gemini).
-      Ziel-Keyword: ${simulation.targetKeyword}
+      Analysiere die Simulation für das Keyword: ${simulation.targetKeyword}.
+      Extrahierte Such-Muster: ${JSON.stringify(allQueries)}
+      Metadaten (GEO): ${JSON.stringify(simulation.metadata)}
       
-      Extrahierte Such-Muster der KIs: ${JSON.stringify(allQueries)}
-      Metadaten-Analyse: ${JSON.stringify(simulation.metadata)}
-
-      Erstelle als 'Logic Layer' eine konsolidierte SEO-Strategie, um bei ALLEN 3 Modellen zu ranken.
-      Antworte auf Deutsch.
+      Erstelle eine GEO-Strategie (Generative Engine Optimization) auf Deutsch:
+      
+      1. KI-RANKING-FAKTOREN (WICHTIG): Identifiziere die 5-7 wichtigsten quantitativen Faktoren (Score 0-100), die für dieses spezifische Keyword den Ausschlag bei KI-Modellen geben.
+         (Beispiele: 'Semantische Dichte', 'Strukturierte Daten', 'Marken-Autorität', 'Zitat-Qualität', 'Frischegrad').
+      
+      2. Content-Strategie:
+         - Identifiziere 'Information Gains': Welche einzigartigen Daten fehlen den KIs noch?
+         - E-E-A-T Optimierung: Wie wird die Seite als Primärquelle etabliert?
+         - Sentiment-Tweak: Wording-Anpassungen für positives KI-Sentiment.
+      
+      3. Erstelle einen konkreten Massnahmenplan ('Action Plan').
     `;
 
     const response = await ai.models.generateContent({

@@ -42,7 +42,8 @@ const SimulationConsole: React.FC<SimulationConsoleProps> = ({ data, loading }) 
             '> Perplexity: Zitierebenen werden gescannt...',
             '> Gemini: Graph-Verbindungen analysiert...',
             '> JSON-Objekt abgefangen (24kb)...',
-            '> Netzwerk-Latenz normalisiert...'
+            '> Berechne Citation-Probability...',
+            '> Analysiere Table-Inclusion...'
         ];
         if (Math.random() > 0.7) {
              setLogs(prev => [...prev, msgs[Math.floor(Math.random() * msgs.length)]]);
@@ -56,7 +57,7 @@ const SimulationConsole: React.FC<SimulationConsoleProps> = ({ data, loading }) 
             { name: 'Perplexity', status: 'done', progress: 100 },
             { name: 'Gemini', status: 'done', progress: 100 }
         ]);
-        setLogs(prev => [...prev, '> ERFOLG: Alle Datenquellen konsolidiert.', '> Logic Layer aktiv.']);
+        setLogs(prev => [...prev, '> ERFOLG: Alle Datenquellen konsolidiert.', '> GEO-Metriken berechnet.']);
     }
   }, [loading, data]);
 
@@ -127,21 +128,21 @@ const SimulationConsole: React.FC<SimulationConsoleProps> = ({ data, loading }) 
          <div className="flex-1 overflow-y-auto p-6 bg-[#0d1625]/60 relative">
             {data ? (
               <div className="space-y-6">
-                 {/* Metadata Card */}
+                 {/* Metadata Card - UPDATED FOR GEO */}
                  <div className="p-4 rounded-xl bg-[#101E35] border border-white/5">
-                    <h4 className="text-xs text-[#61666D] uppercase mb-2">Global Metadata</h4>
+                    <h4 className="text-xs text-[#61666D] uppercase mb-2">GEO Metriken</h4>
                     <div className="grid grid-cols-3 gap-2">
                         <div className="text-center p-2 rounded bg-white/5">
-                             <div className="text-[10px] text-[#F6F7F8]/50">Preis-Sensibilität</div>
-                             <div className="text-[#FCC001] font-bold text-sm">{data.metadata.priceSensitivity}</div>
+                             <div className="text-[10px] text-[#F6F7F8]/50">Citation Chance</div>
+                             <div className="text-[#FCC001] font-bold text-sm truncate">{data.metadata.citationProbability}</div>
                         </div>
                         <div className="text-center p-2 rounded bg-white/5">
-                             <div className="text-[10px] text-[#F6F7F8]/50">Tech-Tiefe</div>
-                             <div className="text-[#46BFED] font-bold text-sm">{data.metadata.technicalDepth}</div>
+                             <div className="text-[10px] text-[#F6F7F8]/50">Tabellen-Slot</div>
+                             <div className="text-[#46BFED] font-bold text-sm truncate">{data.metadata.tableInclusion}</div>
                         </div>
                         <div className="text-center p-2 rounded bg-white/5">
-                             <div className="text-[10px] text-[#F6F7F8]/50">Reviews</div>
-                             <div className="text-[#E33A74] font-bold text-sm">{data.metadata.reviewImportance}%</div>
+                             <div className="text-[10px] text-[#F6F7F8]/50">Sentiment</div>
+                             <div className="text-[#E33A74] font-bold text-sm truncate">{data.metadata.brandSentiment}</div>
                         </div>
                     </div>
                  </div>
