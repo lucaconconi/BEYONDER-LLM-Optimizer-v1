@@ -1,10 +1,17 @@
+// Represents the data extracted from a specific LLM provider
+export interface ProviderInsight {
+  name: 'ChatGPT' | 'Perplexity' | 'Gemini';
+  status: 'connected' | 'intercepted';
+  interceptedQueries: string[]; // The specific search queries this model "used"
+  latency: number;
+}
+
 // Represents the raw data "intercepted" during the simulation phase
 export interface SimulationData {
   targetKeyword: string;
   timestamp: string;
-  interceptedQueries: string[];
+  providers: ProviderInsight[]; // Now an array of providers
   detectedIntent: string;
-  simulatedNetworkLatencyMs: number;
   metadata: {
     priceSensitivity: string;
     technicalDepth: string;

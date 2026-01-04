@@ -3,7 +3,7 @@ import { AppStatus, SimulationData, StrategyReport } from './types';
 import { simulateNetworkTraffic, generateStrategyReport } from './services/geminiService';
 import SimulationConsole from './components/SimulationConsole';
 import AnalysisDashboard from './components/AnalysisDashboard';
-import { Search, Cpu, ArrowRight, RefreshCw, Zap } from 'lucide-react';
+import { Search, Cpu, ArrowRight, RefreshCw, Zap, Network } from 'lucide-react';
 
 const App: React.FC = () => {
   const [keyword, setKeyword] = useState('');
@@ -22,11 +22,11 @@ const App: React.FC = () => {
     setErrorMsg(null);
 
     try {
-      // Step 1: Simulate
+      // Step 1: Simulate Integration Layer (Scraping 3 models)
       const simResult = await simulateNetworkTraffic(keyword);
       setSimulationData(simResult);
       
-      // Step 2: Analyze
+      // Step 2: Logic Layer Analysis
       setStatus(AppStatus.ANALYZING);
       const reportResult = await generateStrategyReport(simResult);
       setStrategyReport(reportResult);
@@ -65,7 +65,7 @@ const App: React.FC = () => {
                 LLM-Optimierer
               </h1>
               <p className="text-[#46BFED] text-sm md:text-base font-medium tracking-wide mt-1">
-                Reverse-Engineering von KI-Suchabsichten
+                Multi-Source KI-Strategie Automatisierung
               </p>
             </div>
           </div>
@@ -85,10 +85,10 @@ const App: React.FC = () => {
           <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-10 animate-fadeIn">
             <div className="w-full max-w-3xl text-center space-y-6">
               <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-                Dominiere die <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9220] to-[#FCC001]">LLM-Empfehlungen</span>
+                Hacke den <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9220] to-[#FCC001]">Network-Tab</span> der KIs
               </h2>
               <p className="text-[#F6F7F8]/60 text-lg md:text-xl font-light max-w-2xl mx-auto">
-                Unsere Engine simuliert den internen Verarbeitungsprozess eines LLMs, um versteckte Ranking-Faktoren für deine Nische aufzudecken.
+                Unser <strong>Integration Layer</strong> greift automatisch die Suchanfragen von ChatGPT, Perplexity und Gemini ab, um dir den perfekten SEO-Plan zu liefern.
               </p>
             </div>
             
@@ -100,7 +100,7 @@ const App: React.FC = () => {
                   type="text" 
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
-                  placeholder="z.B. Bestes CRM für KMU, Veganes Proteinpulver..."
+                  placeholder="Nische eingeben (z.B. CRM Software, Laufschuhe...)"
                   className="flex-1 bg-transparent border-none outline-none text-white px-6 py-5 placeholder:text-[#F6F7F8]/30 text-lg font-medium"
                 />
                 <button 
@@ -114,16 +114,16 @@ const App: React.FC = () => {
               </div>
             </form>
 
-            <div className="flex gap-8 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-                {/* Decorative Pill Shapes */}
-                <div className="px-4 py-2 rounded-full glass-panel border border-white/5 text-xs text-white/50">
-                    Kosten-Analyse
+            <div className="flex gap-4 md:gap-8 opacity-60">
+                {/* Provider Icons */}
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-white/5">
+                    <div className="w-2 h-2 rounded-full bg-[#71D033]"></div> <span className="text-xs font-mono">ChatGPT</span>
                 </div>
-                <div className="px-4 py-2 rounded-full glass-panel border border-white/5 text-xs text-white/50">
-                    Sentiment-Erkennung
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-white/5">
+                    <div className="w-2 h-2 rounded-full bg-[#46BFED]"></div> <span className="text-xs font-mono">Perplexity</span>
                 </div>
-                <div className="px-4 py-2 rounded-full glass-panel border border-white/5 text-xs text-white/50">
-                    Kontext-Cluster
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-white/5">
+                    <div className="w-2 h-2 rounded-full bg-[#E33A74]"></div> <span className="text-xs font-mono">Gemini</span>
                 </div>
             </div>
           </div>
@@ -134,13 +134,13 @@ const App: React.FC = () => {
           <div className="space-y-8 animate-slideUp">
             <div className="flex items-center gap-5 mb-2 pl-2">
               <div className={`p-3 rounded-2xl shadow-lg border border-white/10 ${status === AppStatus.COMPLETE ? 'bg-[#101E35] text-[#61666D]' : 'bg-[#33D099]/10 text-[#33D099] shadow-[0_0_15px_rgba(51,208,153,0.2)]'}`}>
-                <Cpu size={32} className={status === AppStatus.SIMULATING ? 'animate-pulse' : ''} />
+                <Network size={32} className={status === AppStatus.SIMULATING ? 'animate-pulse' : ''} />
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-white tracking-tight">
-                  {status === AppStatus.SIMULATING ? 'Netzwerkverkehr wird abgefangen...' : 
-                   status === AppStatus.ANALYZING ? 'Extrahierte Daten werden verarbeitet...' :
-                   'Analyse abgeschlossen'}
+                  {status === AppStatus.SIMULATING ? 'Integration Layer: Scraping aktiv...' : 
+                   status === AppStatus.ANALYZING ? 'Logic Layer: Daten werden korreliert...' :
+                   'Strategie-Report generiert'}
                 </h2>
                 <p className="text-base text-[#F6F7F8]/50 font-medium">
                   Ziel: <span className="text-[#33D099]">{keyword}</span>
@@ -165,14 +165,14 @@ const App: React.FC = () => {
         {/* Error State */}
         {status === AppStatus.ERROR && (
           <div className="p-8 glass-panel border-l-4 border-[#E33A4E] rounded-r-xl rounded-l-none text-center max-w-2xl mx-auto">
-            <h3 className="text-[#E33A4E] font-bold text-xl mb-3">Prozess fehlgeschlagen</h3>
+            <h3 className="text-[#E33A4E] font-bold text-xl mb-3">Verbindung fehlgeschlagen</h3>
             <p className="text-[#F6F7F8]/70 mb-6">{errorMsg}</p>
             <button 
               onClick={handleReset}
               style={{ '--btn-bg': '#101E35' } as React.CSSProperties}
               className="glossy-btn px-6 py-3 rounded-full text-[#F6F7F8] border border-white/10"
             >
-              Erneut versuchen
+              Neustart
             </button>
           </div>
         )}
