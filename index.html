@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LLM-Optimierer & Strategie-Automatisierer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@400;500;600;700;800&display=swap');
+      
+      :root {
+        --color-midnight: #101E35;
+        --color-orange: #FF9220;
+        --color-gold: #FCC001;
+        --color-sky: #46BFED;
+        --color-aqua: #33D099;
+        --color-pink: #E33A74;
+        --color-white-smoke: #F6F7F8;
+        --color-grey-dark: #61666D;
+        --color-ok: #71D033;
+        --color-info: #467CED;
+        --color-warn: #FCC001;
+        --color-error: #E33A4E;
+      }
+
+      body {
+        font-family: 'Montserrat', sans-serif;
+        background: linear-gradient(135deg, #101E35 0%, #0d1625 40%, #1a3c40 100%);
+        color: var(--color-white-smoke);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* Glassmorphism Utilities */
+      .glass-panel {
+        background: rgba(16, 30, 53, 0.65);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      }
+
+      .glass-input {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+      }
+
+      /* Glossy Button Effect */
+      .glossy-btn {
+        background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%), var(--btn-bg);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+      .glossy-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 7px 14px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.4);
+        filter: brightness(1.1);
+      }
+      .glossy-btn:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      }
+
+      .font-mono {
+        font-family: 'JetBrains Mono', monospace;
+      }
+      
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgba(16, 30, 53, 0.5); 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(70, 191, 237, 0.3); 
+        border-radius: 99px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(70, 191, 237, 0.6); 
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
